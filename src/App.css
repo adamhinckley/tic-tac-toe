@@ -1,20 +1,24 @@
+#root {
+  margin: 0 auto;
+  max-width: 600px;
+  width: 100%;
+}
+
 .outer-container {
   display: flex;
   flex-direction: row;
 }
 
 .inner-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 670px;
+  width: 415px;
+  height: 415px;
 }
 
 .grid-item {
-  height: 200px;
-  width: 200px;
+  height: 100%;
+  width: 30%;
   cursor: pointer;
-  margin: 10px;
+  margin: 5px;
   background: #e9dedb;
   display: flex;
   align-items: center;
@@ -28,4 +32,18 @@
 
 .no-pointer {
   cursor: default;
+}
+.no-pointer:hover {
+  background: #e9dedb;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  height: 33.3%;
+  padding: 5px 0;
+}
+
+.winning-square {
+  background: #f8786c;
 }

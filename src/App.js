@@ -1,18 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import Instructions from "./components/Instructions.js";
-
-const createGrid = () => {
-  let grid = [];
-  for (let i = 0; i < 9; i++) {
-    grid.push({
-      className: "grid-item",
-      id: i,
-      value: "",
-    });
-  }
-  return grid;
-};
+import { createGrid, winningCombos } from "./util/helpers";
 
 const TicTacToe = () => {
   const [currentPlayer, setCurrentPlayer] = useState("Player 1");
@@ -21,7 +10,7 @@ const TicTacToe = () => {
   const [winner, setWinner] = useState(null);
   const [clicks, setClicks] = useState(0);
 
-  const handleClick = (id, value) => {
+  const handleClick = (id, value, row) => {
     if (value || winner) return;
 
     currentPlayer === "Player 1"
@@ -30,29 +19,22 @@ const TicTacToe = () => {
 
     currentLetter === "X" ? setCurrentLetter("O") : setCurrentLetter("X");
 
-    grid[id].value = currentLetter;
+    const indexInRow = grid[row].findIndex((item) => item.id === id);
+
+    grid[row][indexInRow].value = currentLetter;
     setGrid(grid);
-    checkWinner();
+    checkWinner(grid);
     setClicks(clicks + 1);
   };
 
-  const checkWinner = () => {
-    const winningCombos = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
+  const checkWinner = (grid) => {
+    const flatGrid = grid.flat();
 
     winningCombos.forEach((combo) => {
       let oCount = 0;
       let xCount = 0;
       combo.forEach((id) => {
-        const { value } = grid[id];
+        const { value } = flatGrid[id];
         if (value) {
           value === "O" ? oCount++ : xCount++;
         }
@@ -76,23 +58,31 @@ const TicTacToe = () => {
     setClicks(0);
   };
 
+  const renderRow = (row) => (
+    <div className="row">
+      {grid[row].map(({ className, id, value }) => {
+        return (
+          <div
+            className={
+              // default pointer if there is a winner or letter
+              value || winner ? `${className} no-pointer` : className
+            }
+            id={id}
+            onClick={() => handleClick(id, value, row)}
+          >
+            {value}
+          </div>
+        );
+      })}
+    </div>
+  );
+
   return (
     <div className="outer-container">
       <div className="inner-container">
-        {grid.map(({ className, id, value }) => {
-          return (
-            <div
-              className={
-                // default pointer if there is a winner or letter
-                value || winner ? `${className} no-pointer` : className
-              }
-              id={id}
-              onClick={() => handleClick(id, value)}
-            >
-              {value}
-            </div>
-          );
-        })}
+        {renderRow(0)}
+        {renderRow(1)}
+        {renderRow(2)}
       </div>
       <div>
         {!winner && <p>Next player: {currentPlayer}</p>}
