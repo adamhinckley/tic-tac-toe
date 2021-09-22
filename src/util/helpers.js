@@ -11,7 +11,6 @@ export const createGrid = () => {
       count++;
     }
   }
-  console.log(grid);
   return grid;
 };
 
@@ -25,3 +24,10 @@ export const winningCombos = [
   [0, 4, 8],
   [2, 4, 6],
 ];
+
+export const styleWinningCombos = (winningCombo) => {
+  winningCombo.forEach((id) => {
+    document.getElementById(id).style.backgroundColor = "#f8786c";
+    console.log(document.getElementById(id));
+  });
+};
